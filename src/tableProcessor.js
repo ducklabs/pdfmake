@@ -36,6 +36,8 @@ TableProcessor.prototype.beginTable = function (writer) {
 
 	this.drawHorizontalLine(0, writer);
 
+	if (this.tableNode.table.onBeginTable) this.tableNode.table.onBeginTable(writer)
+
 	function getTableInnerContentWidth() {
 		var width = 0;
 
@@ -131,6 +133,8 @@ TableProcessor.prototype.beginRow = function (rowIndex, writer) {
 	this.rowPaddingTop = this.layout.paddingTop(rowIndex, this.tableNode);
 	this.bottomLineWidth = this.layout.hLineWidth(rowIndex + 1, this.tableNode);
 	this.rowPaddingBottom = this.layout.paddingBottom(rowIndex, this.tableNode);
+
+	if (this.tableNode.table.onBeginRow) this.tableNode.table.onBeginRow(rowIndex, writer)
 
 	this.rowCallback = this.onRowBreak(rowIndex, writer);
 	writer.tracker.startTracking('pageChanged', this.rowCallback);
@@ -236,6 +240,8 @@ TableProcessor.prototype.drawVerticalLine = function (x, y0, y1, vLineIndex, wri
 };
 
 TableProcessor.prototype.endTable = function (writer) {
+	if (this.tableNode.table.onEndTable) this.tableNode.table.onEndTable(writer)
+
 	if (this.cleanUpRepeatables) {
 		writer.popFromRepeatables();
 	}
@@ -390,6 +396,8 @@ TableProcessor.prototype.endRow = function (rowIndex, writer, pageBreaks) {
 		this.cleanUpRepeatables = true;
 		this.headerRepeatable = null;
 	}
+
+	if (this.tableNode.table.onEndRow) this.tableNode.table.onEndRow(rowIndex, writer,  pageBreaks)
 
 	function getLineXs() {
 		var result = [];
